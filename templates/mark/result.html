@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<body>
+<center>
+    <form method="post" action="/mark/result/">
+        {% csrf_token %}
+        <input type="text" name="query">
+        <input type="submit" value="query搜索">
+    </form>
+    <br><br>
+    <form method="post" action="">
+        {% csrf_token %}
+        <table border="1" cellpadding="8" width="75%">
+            <tr>
+                <th>query：</th>
+                <td><input type="radio" name="query" value="{{ query }}" checked>{{ query }}
+                    <input type="radio" name="one_id" value="{{ one_id }}" checked>{{ one_id }}</td>
+            </tr>
+            <tr>
+                <th>候选实体：</th>
+                <td>
+                    {% if not entity %}
+                        {% for entity in entity_list %}
+                            {% if forloop.counter == 1 %}
+                                <label><input type="radio" name="entity" value="{{ entity }}" checked>{{ entity }}<br></label>
+                            {% endif %}
+                            {% if forloop.counter != 1 %}
+                                <label><input type="radio" name="entity" value="{{ entity }}">{{ entity }}<br></label>
+                            {% endif %}
+                        {% endfor %}
+                        <label><input type="radio" name="entity" value="没有候选实体"><b>没有候选实体</b><br></label>
+                    {% endif %}
+                    {% if entity %}
+                        {% for one_entity in entity_list %}
+                            {% if one_entity == entity %}
+                                <label><input type="radio" name="entity" value="{{ one_entity }}" checked>{{ one_entity }}<br></label>
+
+                            {% endif %}
+                            {% if one_entity  != entity %}
+                                <label><input type="radio" name="entity" value="{{ one_entity }}">{{ one_entity }}<br></label>
+                            {% endif %}
+                        {% endfor %}
+                        <label><input type="radio" name="entity" value="没有候选实体"><b>没有候选实体</b><br></label>
+                    {% endif %}
+                    <input formaction="" type="submit" value="候选实体不是第一个，重新检索" id="submit1">
+                </td>
+            </tr>
+            <tr>
+                <th>当前候选实体：</th>
+                <td>
+                    {% if entity %}
+                        <b>{{ entity }}</b>
+                    {% endif %}
+                    {% if not entity %}
+                        <b>{{ entity_list.0 }}</b>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>候选关系：</th>
+                <td>
+                    {% for predicate, value in entity_relationship_list %}
+                        {% if forloop.counter == 1 %}
+                            <label><input type="radio" name="relationship" value="{{ predicate }}:{{ value }}" checked>
+                                {{ predicate }}  :  {{ value }}<br></label>
+                        {% endif %}
+                        {% if forloop.counter != 1 %}
+                            <label><input type="radio" name="relationship" value="{{ predicate }}:{{ value }}">
+                                {{ predicate }}  :  {{ value }}<br></label>
+                        {% endif %}
+                    {% endfor %}
+                    {% if entity_relationship_list %}
+                        <label><input type="radio" name="relationship" value="没有候选关系"><b>没有候选关系</b><br></label>
+                    {% endif %}
+                    {% if not entity_relationship_list %}
+                        <label><input type="radio" name="relationship" value="没有候选关系" checked><b>没有候选关系</b><br></label>
+                    {% endif %}
+                    属性<input type="text" name="input1">
+                    值<input type="text" name="input2">
+                </td>
+            </tr>
+        </table>
+        <br>
+        <br>
+        <input formaction="/mark/submit/" type="submit" value="提交" style="width: 100px" id="click_submit">
+        <script type="text/javascript" language=JavaScript>
+            document.onkeydown=function(event){
+                var e = event || window.event || arguments.callee.caller.arguments[0];
+                if(e && e.keyCode==13){ // enter 键
+                    //要做的事情
+                    // alert("按 Enter");
+                    document.getElementById("click_submit").click();
+                }
+            };
+        </script>
+    </form>
+</center>
+</body>
+</html>

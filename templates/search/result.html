@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<center>
+    <form method="post" action="/search/result/">
+        {% csrf_token %}
+        <input type="text" name="keyword">
+        <input type="submit" value="搜索">
+    </form>
+    <br>
+    <table border="1" cellpadding="8" width="75%">
+        <tbody>
+        {% for predicate, value_list in result_list.items %}
+            <tr>
+                <th align="left" width="15%">{{ predicate }}</th>
+                <td>
+                    {% for value in value_list %}
+                        {{ value }}<br>
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</center>
+</body>
+</html>
